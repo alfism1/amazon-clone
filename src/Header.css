@@ -1,0 +1,142 @@
+.header__wrapper {
+  background-color: #131921;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.header {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: space-between;
+}
+
+.header__logo {
+  width: 100px;
+  object-fit: contain;
+  margin: 0 20px;
+  margin-top: 18px;
+}
+
+.header__search {
+  display: flex;
+  flex: 0.8;
+  align-items: center;
+  border-radius: 24px;
+}
+
+.header__searchInput {
+  height: 12px;
+  padding: 10px;
+  border: none;
+  width: 100%;
+}
+
+.header__searchIcon {
+  padding: 5px;
+  height: 22px !important;
+  background-color: #cd9042;
+}
+
+.header__optionLineOne {
+  font-size: 10px;
+}
+
+.header__optionLineTwo {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.header__optionBasket {
+  display: flex;
+  align-items: center;
+  color: white;
+  margin-left: 10px;
+}
+
+.header__basketCount {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.header__nav {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.header__option {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  margin-right: 10px;
+  color: white;
+}
+
+.header__menu {
+  display: none;
+}
+
+.sidebar__wrapper {
+  display: none;
+  position: relative;
+}
+
+@media only screen and (max-width: 740px) {
+  .header {
+    justify-content: flex-start;
+  }
+  .header__nav {
+    display: none;
+  }
+  .header__search {
+    flex: 1;
+    padding-right: 10px;
+  }
+  .header__searchInput {
+    height: 12px;
+    padding: 10px;
+    border: none;
+    width: 100%;
+  }
+
+  .header__menu {
+    display: block;
+    background: none;
+    padding: 0;
+    margin-top: 1px;
+    margin-right: 10px;
+    border: none;
+  }
+
+  .header__nav__bars {
+    color: white;
+    padding: 5px 10px;
+    height: 22px !important;
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    margin-left: auto;
+    padding: 5px 0;
+    background-color: #131921;
+    position: fixed;
+    z-index: 999;
+    right: 0;
+    top: 60px;
+  }
+
+  .sidebar .header__option {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #444444;
+  }
+}
