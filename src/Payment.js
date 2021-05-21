@@ -45,6 +45,7 @@ function Payment() {
 
     setProcessing(true);
 
+    // eslint-disable-next-line no-unused-vars
     const payload = await stripe
       .confirmCardPayment(clientSecret, {
         payment_method: {

@@ -5,6 +5,7 @@ import "./Orders.css";
 import { useStateValue } from "./StateProvider";
 
 function Orders() {
+  // eslint-disable-next-line no-unused-vars
   const [{ basket, user }, dispatch] = useStateValue();
   const [orders, setOrders] = useState([]);
 
