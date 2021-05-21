@@ -5,7 +5,7 @@
 }
 
 .checkoutProduct__info {
-  padding-left: 20px
+  padding-left: 20px;
 }
 
 .checkoutProduct__info > button {
@@ -29,4 +29,21 @@
 .checkoutProduct__title {
   font-size: 17px;
   font-weight: 800;
+}
+
+@media (max-width: 550px) {
+  .checkoutProduct {
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  .checkoutProduct__image {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .checkoutProduct__title, .checkoutProduct__rating, .checkoutProduct__price {
+    margin-top: 10px;
+  }
 }

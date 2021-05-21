@@ -6,13 +6,13 @@ import { Link } from "react-router-dom";
 import { useStateValue } from "./StateProvider";
 import { auth } from "./firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
 function Sidebar({ user, basket_length, handleAuthentication }) {
   const closeSidebar = () => {
     var x = document.getElementById("sidebar__wrapper");
     x.style.display = "none";
-  }
+  };
   return (
     <div className="sidebar">
       <Link to={!user ? "/login" : "/"}>
@@ -39,11 +39,9 @@ function Sidebar({ user, basket_length, handleAuthentication }) {
       </div>
 
       <Link to="/checkout">
-        <div onClick={closeSidebar} className="header__optionBasket">
-          <ShoppingBasketIcon />
-          <span className="header__optionLineTwo header__basketCount">
-            {basket_length}
-          </span>
+        <div onClick={closeSidebar} className="header__option">
+        <span className="header__optionLineOne">Items</span>
+        <span className="header__optionLineTwo">Shopping Chart ({basket_length})</span>
         </div>
       </Link>
     </div>
@@ -70,7 +68,7 @@ function Header() {
   };
 
   return (
-    <div style={{marginBottom: "60px"}}>
+    <div style={{ marginBottom: "60px" }}>
       <div className="header__wrapper">
         <div className="header">
           <Link to="/">
@@ -121,11 +119,24 @@ function Header() {
             </Link>
           </div>
 
-          <div>
-          <button className="header__menu" onClick={handleMobileMenu}>
-            <FontAwesomeIcon className="header__nav__bars" icon={faBars} />
-          </button>
-
+          {/* for mobile */}
+          <div className="header__nav__wrapper">
+            <div className="header__nav__basket">
+              <Link to="/checkout">
+                <div className="header__optionBasket">
+                  <FontAwesomeIcon icon={faShoppingCart} />
+                  <span className="header__optionLineTwo header__basketCount">
+                    {basket?.length}
+                  </span>
+                </div>
+              </Link>
+            </div>
+            <div>
+              <button className="header__menu" onClick={handleMobileMenu}>
+                <FontAwesomeIcon className="header__nav__bars" icon={faBars} />
+              </button>
+            </div>
+            {/* end of for mobile */}
           </div>
         </div>
       </div>

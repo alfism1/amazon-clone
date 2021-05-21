@@ -54,23 +54,22 @@ function Payment() {
       .then(({ paymentIntent }) => {
         // paymentIntent = payment confirmation
 
-        db
-          .collection('users')
+        db.collection("users")
           .doc(user?.uid)
           .collection("orders")
           .doc(paymentIntent.id)
           .set({
             basket: basket,
             amount: paymentIntent.amount,
-            created: paymentIntent.created
-          })
+            created: paymentIntent.created,
+          });
 
         setSucceeded(true);
         setError(null);
         setProcessing(false);
 
         dispatch({
-          type: "EMPTY_BASKET"
+          type: "EMPTY_BASKET",
         });
 
         history.replace("/orders");
@@ -129,7 +128,26 @@ function Payment() {
           <div className="payment__details">
             {/* Stripe */}
             <form onSubmit={handleSubmit}>
-              <CardElement onChange={handleChange} />
+              <CardElement
+                className="payment__card"
+                onChange={handleChange}
+                options={{
+                  style: {
+                    base: {
+                      lineHeight: "40px",
+                      padding: "20px",
+                      fontSize: "16px",
+                      color: "#424770",
+                      "::placeholder": {
+                        color: "#aab7c4",
+                      },
+                    },
+                    invalid: {
+                      color: "#9e2146",
+                    },
+                  },
+                }}
+              />
 
               <div className="payment__priceContainer">
                 <CurrencyFormat

@@ -1,12 +1,23 @@
 .order {
-  padding: 40px;
+  padding: 20px 40px;
   margin: 20px 0;
   border: 1px solid lightgray;
   background-color: white;
   position: relative;
 }
 
+.order__items > *:first-child {
+  padding-top: 10px;
+  border-top: 1px solid #eeeeee;
+}
+
+.order__items > * {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eeeeee;
+}
+
 .order__id {
+  color: #666;
   position: absolute;
   top: 40px;
   right: 20px;
@@ -15,4 +26,15 @@
 .order__total {
   font-weight: 500;
   text-align: right;
+}
+
+@media (max-width: 550px) {
+  .order__id {
+    position: inherit;
+    top: unset;
+    right: unset;
+  }
+  .order h2, p.order__id, p.order__date {
+    margin-top: 5px;
+  }
 }

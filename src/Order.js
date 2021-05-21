@@ -9,21 +9,27 @@ function Order({ order }) {
     <div className="order">
       <h2>Order</h2>
 
-      <p>{moment.unix(order.data.created).format("MMMM Do YYYY, h:mma")}</p>
       <p className="order__id">
         <small>{order.id}</small>
       </p>
-      {order.data.basket?.map((item, i) => (
-        <CheckoutProduct
-          key={i}
-          id={item.id}
-          title={item.title}
-          image={item.image}
-          price={item.price}
-          rating={item.rating}
-          hideButton={true}
-        />
-      ))}
+      <p className="order__date">
+        <small>
+          {moment.unix(order.data.created).format("MMMM Do YYYY, h:mma")}
+        </small>
+      </p>
+      <div className="order__items">
+        {order.data.basket?.map((item, i) => (
+          <CheckoutProduct
+            key={i}
+            id={item.id}
+            title={item.title}
+            image={item.image}
+            price={item.price}
+            rating={item.rating}
+            hideButton={true}
+          />
+        ))}
+      </div>
 
       <CurrencyFormat
         renderText={(value) => (
