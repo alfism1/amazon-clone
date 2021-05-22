@@ -10,7 +10,6 @@ function Subtotal() {
   const [{basket}] = useStateValue();
 
   const handleSubmit = (e) => {
-    console.log("Clicked", e.target.value);
     history.push('/payment')
   }
 
