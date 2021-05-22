@@ -53,8 +53,10 @@ function Payment() {
       .then(({ paymentIntent }) => {
         // paymentIntent = payment confirmation
 
-        db.collection("users")
-          .doc(user?.uid)
+        const userRef = db.collection("users")
+          .doc(user?.uid);
+
+        userRef
           .collection("orders")
           .doc(paymentIntent.id)
           .set({
@@ -66,6 +68,12 @@ function Payment() {
         setSucceeded(true);
         setError(null);
         setProcessing(false);
+
+        // empty basket on firestore
+        db.collection("users")
+        .doc(user.uid).update({
+          basket: []
+        });
 
         dispatch({
           type: "EMPTY_BASKET",
