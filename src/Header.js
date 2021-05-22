@@ -55,6 +55,9 @@ function Header() {
   const handleAuthentication = () => {
     if (user) {
       auth.signOut();
+      dispatch({
+        type: "EMPTY_BASKET",
+      });
     }
   };
 

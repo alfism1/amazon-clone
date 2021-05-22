@@ -31,7 +31,6 @@ function Home() {
 
         <div className="__row home__row">
           {items.map((item, i) => {
-            console.log(item.data.category);
             return (
               <div key={i} className="__col3">
                 <Product

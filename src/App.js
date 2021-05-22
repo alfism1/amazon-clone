@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import "./App.css";
 import Checkout from "./Checkout";
-import { auth } from "./firebase";
+import { db, auth } from "./firebase";
 import Header from "./Header";
 import Home from "./Home";
 import Login from "./Login";
@@ -28,11 +28,36 @@ function App() {
           type: "SET_USER",
           user: authUser,
         });
+
+        // load user's basket from firestore and set to basket state
+        db.collection("users")
+          .doc(authUser.uid)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              doc.data().basket.forEach((basket) => {
+                dispatch({
+                  type: "ADD_TO_BASKET",
+                  item: basket,
+                });
+              });
+            }
+          });
       } else {
         dispatch({
           type: "SET_USER",
           user: null,
         });
+
+        const localBasket = window.localStorage.getItem("basket");
+        if (localBasket !== null) {
+          JSON.parse(localBasket).forEach((basket) => {
+            dispatch({
+              type: "ADD_TO_BASKET",
+              item: basket,
+            });
+          });
+        }
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps

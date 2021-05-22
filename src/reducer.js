@@ -9,12 +9,14 @@ export const getBasketTotal = (basket) =>
 const reducer = (state, action) => {
   switch (action.type) {
     case "ADD_TO_BASKET":
+      window.localStorage.setItem("basket", JSON.stringify([...state.basket, action.item]));
       return {
         ...state,
         basket: [...state.basket, action.item],
       };
 
     case "EMPTY_BASKET":
+      window.localStorage.removeItem("basket");
       return {
         ...state,
         basket: []
@@ -32,6 +34,7 @@ const reducer = (state, action) => {
         console.warn(`Can't remove product (id: ${action.id}) as its not in basket!`);
       }
 
+      window.localStorage.setItem("basket", JSON.stringify(newBasket));
       return {
         ...state,
         basket: newBasket
