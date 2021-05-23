@@ -8,10 +8,11 @@ import "./Payment.css";
 import { getBasketTotal } from "./reducer";
 import { useStateValue } from "./StateProvider";
 import { db } from "./firebase";
+import { Skeleton } from "@material-ui/lab";
 
 function Payment() {
   // eslint-disable-next-line no-unused-vars
-  const [{ basket, user }, dispatch] = useStateValue();
+  const [{ basket, basketLoaded, user }, dispatch] = useStateValue();
   const history = useHistory();
 
   const stripe = useStripe();
@@ -53,26 +54,21 @@ function Payment() {
       .then(({ paymentIntent }) => {
         // paymentIntent = payment confirmation
 
-        const userRef = db.collection("users")
-          .doc(user?.uid);
+        const userRef = db.collection("users").doc(user?.uid);
 
-        userRef
-          .collection("orders")
-          .doc(paymentIntent.id)
-          .set({
-            basket: basket,
-            amount: paymentIntent.amount,
-            created: paymentIntent.created,
-          });
+        userRef.collection("orders").doc(paymentIntent.id).set({
+          basket: basket,
+          amount: paymentIntent.amount,
+          created: paymentIntent.created,
+        });
 
         setSucceeded(true);
         setError(null);
         setProcessing(false);
 
         // empty basket on firestore
-        db.collection("users")
-        .doc(user.uid).update({
-          basket: []
+        db.collection("users").doc(user.uid).update({
+          basket: [],
         });
 
         dispatch({
@@ -92,7 +88,15 @@ function Payment() {
     <div className="payment">
       <div className="payment__container">
         <h1>
-          Checkout (<Link to="/checkout">{basket?.length} items</Link>)
+          {basketLoaded ? (
+            <>
+              Checkout (<Link to="/checkout">{basket.length} items</Link>)
+            </>
+          ) : (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Skeleton style={{}} variant="text" width={270} height={50} />
+            </div>
+          )}
         </h1>
 
         {/* Payment section - delivery address */}
@@ -101,9 +105,19 @@ function Payment() {
             <h3>Delivery Address</h3>
           </div>
           <div className="payment__address">
-            <p>{user?.email}</p>
-            <p>Wijaya Kusuma 15</p>
-            <p>Malang, Jawa Timur</p>
+            {user ? (
+              <>
+                <p>{user.email}</p>
+                <p>Wijaya Kusuma 15</p>
+                <p>Malang, Jawa Timur</p>
+              </>
+            ) : (
+              <>
+                <Skeleton variant="text" width={140} />
+                <Skeleton variant="text" width={140} />
+                <Skeleton variant="text" width={140} />
+              </>
+            )}
           </div>
         </div>
 
@@ -113,16 +127,20 @@ function Payment() {
             <h3>Review items and delivery</h3>
           </div>
           <div className="payment__items">
-            {basket.map((item, i) => (
-              <CheckoutProduct
-                key={i}
-                id={item.id}
-                title={item.title}
-                image={item.image}
-                price={item.price}
-                rating={item.rating}
-              />
-            ))}
+            {basketLoaded ? (
+              basket.map((item, i) => (
+                <CheckoutProduct
+                  key={i}
+                  id={item.id}
+                  title={item.title}
+                  image={item.image}
+                  price={item.price}
+                  rating={item.rating}
+                />
+              ))
+            ) : (
+              <CheckoutProduct loading />
+            )}
           </div>
         </div>
 
@@ -160,7 +178,13 @@ function Payment() {
                 <CurrencyFormat
                   renderText={(value) => (
                     <>
-                      <h3>Order Total: {value}</h3>
+                      <h3>
+                        {basketLoaded ? (
+                          `Order Total: ${value}`
+                        ) : (
+                          <Skeleton variant="text" width={140} />
+                        )}
+                      </h3>
                     </>
                   )}
                   decimalScale={2}
