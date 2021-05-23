@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { auth } from "./firebase";
 import "./Login.css";
+import { useStateValue } from "./StateProvider";
 
 function Login() {
   const history = useHistory();
+  // eslint-disable-next-line no-empty-pattern
+  const [{}, dispatch] = useStateValue();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -14,6 +17,9 @@ function Login() {
     auth
       .signInWithEmailAndPassword(email, password)
       .then((auth) => {
+        dispatch({
+          type: "EMPTY_BASKET",
+        });
         history.push("/");
       })
       .catch((error) => alert(error.message));

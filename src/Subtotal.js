@@ -1,17 +1,18 @@
 import React from "react";
-import "./Subtotal.css"
+import "./Subtotal.css";
 import CurrencyFormat from "react-currency-format";
 import { useStateValue } from "./StateProvider";
 import { getBasketTotal } from "./reducer";
 import { useHistory } from "react-router";
+import { Skeleton } from "@material-ui/lab";
 
-function Subtotal() {
+function Subtotal({ loading = false }) {
   const history = useHistory();
-  const [{basket}] = useStateValue();
+  const [{ basket }] = useStateValue();
 
   const handleSubmit = (e) => {
-    history.push('/payment')
-  }
+    history.push("/payment");
+  };
 
   return (
     <div className="subtotal">
@@ -19,21 +20,37 @@ function Subtotal() {
         renderText={(value) => (
           <>
             <p>
-              Subtotal ({basket.length} items): <strong>{value}</strong>
+              {!loading ? (
+                <>
+                  Subtotal ({basket.length} items): <strong>{value}</strong>{" "}
+                </>
+              ) : (
+                <Skeleton variant="text" width="100%" height={25} />
+              )}
             </p>
             <small className="subtotal__gift">
-              <input type="checkbox" /> This order contains a gift
+              {!loading ? (
+                <>
+                  <input type="checkbox" /> This order contains a gift
+                </>
+              ) : (
+                <Skeleton variant="text" width="55%" height={25} />
+              )}
             </small>
           </>
         )}
         decimalScale={2}
-        value={getBasketTotal(basket)} // Part of the homework
+        value={getBasketTotal(basket)}
         displayType={"text"}
         thousandSeparator={true}
         prefix={"$"}
       />
 
-      <button onClick={handleSubmit}>Proceed to Checkout</button>
+      {!loading ? (
+        <button onClick={handleSubmit}>Proceed to Checkout</button>
+      ) : (
+        <Skeleton variant="rect" width="100%" height={30} />
+      )}
     </div>
   );
 }

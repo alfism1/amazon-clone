@@ -7,6 +7,7 @@ import { useStateValue } from "./StateProvider";
 import { auth } from "./firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { Skeleton } from "@material-ui/lab";
 
 function Sidebar({ user, basket_length, handleAuthentication }) {
   const closeSidebar = () => {
@@ -40,15 +41,17 @@ function Sidebar({ user, basket_length, handleAuthentication }) {
 
       <Link to="/checkout">
         <div onClick={closeSidebar} className="header__option">
-        <span className="header__optionLineOne">Items</span>
-        <span className="header__optionLineTwo">Shopping Chart ({basket_length})</span>
+          <span className="header__optionLineOne">Items</span>
+          <span className="header__optionLineTwo">
+            Shopping Chart ({basket_length})
+          </span>
         </div>
       </Link>
     </div>
   );
 }
 
-function Header() {
+function Header({ loadingUser = false, loadingBasket = false }) {
   // eslint-disable-next-line no-unused-vars
   const [{ basket, user }, dispatch] = useStateValue();
 
@@ -92,10 +95,30 @@ function Header() {
             <Link to={!user ? "/login" : "/"}>
               <div onClick={handleAuthentication} className="header__option">
                 <span className="header__optionLineOne">
-                  Hello, {!user ? "Guest" : user.email}
+                  {!loadingUser ? (
+                    <>Hello, {!user ? "Guest" : user.email}</>
+                  ) : (
+                    <Skeleton
+                      style={{ background: "grey" }}
+                      variant="text"
+                      width={85}
+                    />
+                  )}
                 </span>
                 <span className="header__optionLineTwo">
-                  {user ? "Sign Out" : "Sign In"}
+                  {!loadingUser ? (
+                    user ? (
+                      "Sign Out"
+                    ) : (
+                      "Sign In"
+                    )
+                  ) : (
+                    <Skeleton
+                      style={{ background: "grey" }}
+                      variant="text"
+                      width={50}
+                    />
+                  )}
                 </span>
               </div>
             </Link>
@@ -116,7 +139,16 @@ function Header() {
               <div className="header__optionBasket">
                 <ShoppingBasketIcon />
                 <span className="header__optionLineTwo header__basketCount">
-                  {basket?.length}
+                  {!loadingBasket ? (
+                    basket?.length
+                  ) : (
+                    <Skeleton
+                      style={{ background: "grey" }}
+                      variant="text"
+                      width={15}
+                      height={15}
+                    />
+                  )}
                 </span>
               </div>
             </Link>
@@ -129,13 +161,26 @@ function Header() {
                 <div className="header__optionBasket">
                   <FontAwesomeIcon icon={faShoppingCart} />
                   <span className="header__optionLineTwo header__basketCount">
-                    {basket?.length}
+                    {!loadingBasket ? (
+                      basket?.length
+                    ) : (
+                      <Skeleton
+                        style={{ background: "grey" }}
+                        variant="text"
+                        width={15}
+                        height={15}
+                      />
+                    )}
                   </span>
                 </div>
               </Link>
             </div>
             <div>
-              <button className="header__menu" onClick={handleMobileMenu}>
+              <button
+                className="header__menu"
+                onClick={handleMobileMenu}
+                aria-label="Right Align"
+              >
                 <FontAwesomeIcon className="header__nav__bars" icon={faBars} />
               </button>
             </div>

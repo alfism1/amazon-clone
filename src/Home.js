@@ -30,19 +30,33 @@ function Home() {
         />
 
         <div className="__row home__row">
-          {items.map((item, i) => {
-            return (
-              <div key={i} className="__col3">
-                <Product
-                  id={item.id}
-                  title={item.data.title}
-                  price={item.data.price}
-                  rating={item.data.rating}
-                  image={item.data.image}
-                />
+          {items.length > 0 ? (
+            items.map((item, i) => {
+              return (
+                <div key={i} className="__col3">
+                  <Product
+                    id={item.id}
+                    title={item.data.title}
+                    price={item.data.price}
+                    rating={item.data.rating}
+                    image={item.data.image}
+                  />
+                </div>
+              );
+            })
+          ) : (
+            <>
+              <div className="__col3">
+                <Product loading />
               </div>
-            );
-          })}
+              <div className="__col3">
+                <Product loading />
+              </div>
+              <div className="__col3">
+                <Product loading />
+              </div>
+            </>
+          )}
           {/* <div className="__col2">
             <Product
               id="12321341"

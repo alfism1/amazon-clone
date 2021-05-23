@@ -2,8 +2,17 @@ import React from "react";
 import "./CheckoutProduct.css";
 import { useStateValue } from "./StateProvider";
 import { db, auth } from "./firebase";
+import { Skeleton } from "@material-ui/lab";
 
-function CheckoutProduct({ id, image, title, rating, price, hideButton }) {
+function CheckoutProduct({
+  loading = false,
+  id,
+  image,
+  title,
+  rating,
+  price,
+  hideButton,
+}) {
   // eslint-disable-next-line no-unused-vars
   const [{ basket, user }, dispatch] = useStateValue();
 
@@ -26,32 +35,53 @@ function CheckoutProduct({ id, image, title, rating, price, hideButton }) {
         db.collection("users").doc(user.uid).set({
           basket: newBasket,
         });
-      } else {
-        console.log("Non-logged in user!");
       }
     });
   };
 
   return (
     <div className="checkoutProduct">
-      <img className="checkoutProduct__image" src={image} alt={title} />
+      <div className="checkoutProduct__image__wrapper">
+        {!loading ? (
+          <img className="checkoutProduct__image" src={image} alt={title} />
+        ) : (
+          <Skeleton
+            className="checkoutProduct__image_skeleton"
+            variant="rect"
+            height={80}
+          />
+        )}
+      </div>
 
       <div className="checkoutProduct__info">
-        <p className="checkoutProduct__title">{title}</p>
+        <p className="checkoutProduct__title">
+          {!loading ? title : <Skeleton variant="text" width="100%" />}
+        </p>
         <div className="checkoutProduct__rating">
-          {Array(rating)
-            .fill()
-            .map((_, i) => (
-              <p key={i}>🌟</p>
-            ))}
+          {!loading ? (
+            Array(rating)
+              .fill()
+              .map((_, i) => <p key={i}>🌟</p>)
+          ) : (
+            <Skeleton variant="text" width={90} />
+          )}
         </div>
         <p className="checkoutProduct__price">
-          <small>$</small>
-          <strong>{price}</strong>
+          {!loading ? (
+            <>
+              <small>$</small>
+              <strong>{price}</strong>
+            </>
+          ) : (
+            <Skeleton variant="text" width={50} />
+          )}
         </p>
-        {!hideButton && (
-          <button onClick={removeFromBasket}>Remove from Basket</button>
-        )}
+        {!hideButton &&
+          (!loading ? (
+            <button onClick={removeFromBasket}>Remove from Basket</button>
+          ) : (
+            <Skeleton variant="text" width={110} />
+          ))}
       </div>
     </div>
   );

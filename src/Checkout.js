@@ -1,4 +1,3 @@
-import React from "react";
 import "./Checkout.css";
 import "./Layout.css";
 import CheckoutProduct from "./CheckoutProduct";
@@ -7,7 +6,8 @@ import { useStateValue } from "./StateProvider";
 
 function Checkout() {
   // eslint-disable-next-line no-unused-vars
-  const [{ basket, user }] = useStateValue();
+  const [{ basket, basketLoaded }] = useStateValue();
+
   return (
     <div className="checkout">
       <div className="checkout__left">
@@ -21,21 +21,25 @@ function Checkout() {
           {/* <h3>Hello, {user?.email}</h3> */}
           <h2 className="checkout__title">Your shopping Basket</h2>
           <div className="checkout__items">
-            {basket.map((item, i) => (
-              <CheckoutProduct
-                key={i}
-                id={item.id}
-                title={item.title}
-                image={item.image}
-                price={item.price}
-                rating={item.rating}
-              />
-            ))}
+            {basketLoaded ? (
+              basket.map((item, i) => (
+                <CheckoutProduct
+                  key={i}
+                  id={item.id}
+                  title={item.title}
+                  image={item.image}
+                  price={item.price}
+                  rating={item.rating}
+                />
+              ))
+            ) : (
+              <CheckoutProduct loading />
+            )}
           </div>
         </div>
       </div>
       <div className="checkout__right">
-        <Subtotal />
+        <Subtotal loading={!basketLoaded} />
       </div>
     </div>
   );

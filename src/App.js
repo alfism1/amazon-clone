@@ -1,6 +1,6 @@
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import "./App.css";
 import Checkout from "./Checkout";
@@ -18,6 +18,9 @@ const promise = loadStripe("pk_test_VPI52mjgWHlw7wAQQrhbSaJ5007Mty52g4");
 function App() {
   // eslint-disable-next-line no-empty-pattern
   const [{}, dispatch] = useStateValue();
+
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
+  const [isLoadingBasket, setIsLoadingBasket] = useState(true);
 
   useEffect(() => {
     // will only run once when the app component loads
@@ -41,6 +44,10 @@ function App() {
                   item: basket,
                 });
               });
+              dispatch({
+                type: "BASKET_LOADED",
+              });
+              setIsLoadingBasket(false);
             }
           });
       } else {
@@ -58,7 +65,12 @@ function App() {
             });
           });
         }
+        dispatch({
+          type: "BASKET_LOADED",
+        });
+        setIsLoadingBasket(false);
       }
+      setIsLoadingUser(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -68,28 +80,43 @@ function App() {
       <div className="app">
         <Switch>
           <Route path="/test">
-            <Header />
+            <Header
+              loadingUser={isLoadingUser}
+              loadingBasket={isLoadingBasket}
+            />
             <Test />
           </Route>
           <Route path="/orders">
-            <Header />
+            <Header
+              loadingUser={isLoadingUser}
+              loadingBasket={isLoadingBasket}
+            />
             <Orders />
           </Route>
           <Route path="/login">
             <Login />
           </Route>
           <Route path="/checkout">
-            <Header />
+            <Header
+              loadingUser={isLoadingUser}
+              loadingBasket={isLoadingBasket}
+            />
             <Checkout />
           </Route>
           <Route path="/payment">
-            <Header />
+            <Header
+              loadingUser={isLoadingUser}
+              loadingBasket={isLoadingBasket}
+            />
             <Elements stripe={promise}>
               <Payment />
             </Elements>
           </Route>
           <Route path="/">
-            <Header />
+            <Header
+              loadingUser={isLoadingUser}
+              loadingBasket={isLoadingBasket}
+            />
             <Home />
           </Route>
         </Switch>

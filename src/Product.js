@@ -2,8 +2,11 @@ import React from "react";
 import "./Product.css";
 import { useStateValue } from "./StateProvider";
 import { db, auth } from "./firebase";
+import { Skeleton } from "@material-ui/lab";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
-function Product({ id, title, price, image, rating }) {
+function Product({ loading = false, id, title, price, image, rating }) {
   // eslint-disable-next-line no-unused-vars
   const [{ basket, user }, dispatch] = useStateValue();
 
@@ -25,12 +28,10 @@ function Product({ id, title, price, image, rating }) {
     auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         db.collection("users")
-          .doc(user.uid)
+          .doc(user?.uid)
           .set({
             basket: [...basket, { id, title, image, price, rating }],
           });
-      } else {
-        console.log("Non-logged in user!");
       }
     });
   };
@@ -38,22 +39,58 @@ function Product({ id, title, price, image, rating }) {
   return (
     <div className="product">
       <div className="product__info">
-        <p>{title}</p>
+        <p>
+          {loading ? (
+            <>
+              <Skeleton variant="text" width="100%" />
+              <Skeleton variant="text" width="100%" />
+              <Skeleton variant="text" width="90%" />
+            </>
+          ) : (
+            title
+          )}
+        </p>
         <p className="product__price">
-          <small>$</small>
-          <strong>{price}</strong>
+          {loading ? (
+            <Skeleton variant="text" width="15%" />
+          ) : (
+            <>
+              <small>$</small>
+              <strong>{price}</strong>
+            </>
+          )}
         </p>
         <div className="product__rating">
-          {Array(rating)
-            .fill()
-            .map((_, i) => (
-              <p key={i}>🌟</p>
-            ))}
+          {loading ? (
+            <Skeleton variant="text" width="25%" />
+          ) : (
+            Array(rating)
+              .fill()
+              .map((_, i) => <p key={i}>🌟</p>)
+          )}
         </div>
       </div>
 
-      <img src={image} alt={`${title}`} />
-      <button onClick={addToBasket}>Add to Basket</button>
+      {loading ? (
+        <Skeleton variant="rect" width="100%" height={200} />
+      ) : (
+        <img src={image} alt={`${title}`} />
+      )}
+
+      {loading ? (
+        <Skeleton
+          style={{ marginTop: "auto" }}
+          variant="rect"
+          width={100}
+          height={20}
+        />
+      ) : (
+        <>
+          <button onClick={addToBasket}>
+            <FontAwesomeIcon icon={faShoppingCart} style={{marginRight: "3px"}} /> Add to Basket
+          </button>
+        </>
+      )}
     </div>
   );
 }
