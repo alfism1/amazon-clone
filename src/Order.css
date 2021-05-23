@@ -25,7 +25,9 @@
 
 .order__total {
   font-weight: 500;
-  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
 }
 
 @media (max-width: 550px) {
