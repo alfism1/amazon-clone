@@ -8,25 +8,26 @@ function Orders() {
   // eslint-disable-next-line no-unused-vars
   const [{ basket, user }, dispatch] = useStateValue();
   const [orders, setOrders] = useState([]);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(true);
 
   useEffect(() => {
     if (user) {
       db.collection("users")
-      .doc(user?.uid)
-      .collection("orders")
-      .orderBy("created", "desc")
-      .onSnapshot((snapshot) => {
-        setOrders(
-          snapshot.docs.map((doc) => ({
-            id: doc.id,
-            data: doc.data(),
-          }))
-        );
-      });
-    } else{
+        .doc(user?.uid)
+        .collection("orders")
+        .orderBy("created", "desc")
+        .onSnapshot((snapshot) => {
+          setOrders(
+            snapshot.docs.map((doc) => ({
+              id: doc.id,
+              data: doc.data(),
+            }))
+          );
+          setIsLoadingOrders(false);
+        });
+    } else {
       setOrders([]);
     }
-
   }, [user]);
 
   return (
@@ -34,9 +35,11 @@ function Orders() {
       <h1>Your Orders</h1>
 
       <div className="orders__order">
-        {orders?.map((order, i) => (
-          <Order key={i} order={order} />
-        ))}
+        {!isLoadingOrders ? (
+          orders?.map((order, i) => <Order key={i} order={order} />)
+        ) : (
+          <Order loading />
+        )}
       </div>
     </div>
   );
