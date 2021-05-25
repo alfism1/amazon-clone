@@ -7,6 +7,7 @@ import Checkout from "./Checkout";
 import { db, auth } from "./firebase";
 import Header from "./Header";
 import Home from "./Home";
+import Footer from "./Footer";
 import Login from "./Login";
 import Orders from "./Orders";
 import Payment from "./Payment";
@@ -85,6 +86,7 @@ function App() {
               loadingBasket={isLoadingBasket}
             />
             <Test />
+            <Footer />
           </Route>
           <Route path="/orders">
             <Header
@@ -92,6 +94,7 @@ function App() {
               loadingBasket={isLoadingBasket}
             />
             <Orders />
+            <Footer />
           </Route>
           <Route path="/login">
             <Login />
@@ -102,6 +105,7 @@ function App() {
               loadingBasket={isLoadingBasket}
             />
             <Checkout />
+            <Footer />
           </Route>
           <Route path="/payment">
             <Header
@@ -111,6 +115,7 @@ function App() {
             <Elements stripe={promise}>
               <Payment />
             </Elements>
+            <Footer />
           </Route>
           <Route path="/">
             <Header
@@ -118,6 +123,7 @@ function App() {
               loadingBasket={isLoadingBasket}
             />
             <Home />
+            <Footer />
           </Route>
         </Switch>
       </div>
