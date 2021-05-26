@@ -1,7 +1,7 @@
 import React from "react";
 import "./CheckoutProduct.css";
 import { useStateValue } from "./StateProvider";
-import { db, auth } from "./firebase";
+import { db } from "./firebase";
 import { Skeleton } from "@material-ui/lab";
 
 function CheckoutProduct({
@@ -24,19 +24,18 @@ function CheckoutProduct({
 
     // logged in user will save basket state into firestore
     // non-logged in user will save basket state into local storage
-    auth.onAuthStateChanged((authUser) => {
-      if (authUser) {
-        const index = basket.findIndex((basketItem) => basketItem.id === id);
-        let newBasket = [...basket];
 
-        if (index >= 0) {
-          newBasket.splice(index, 1);
-        }
-        db.collection("users").doc(user.uid).set({
-          basket: newBasket,
-        });
+    if (user) {
+      const index = basket.findIndex((basketItem) => basketItem.id === id);
+      let newBasket = [...basket];
+
+      if (index >= 0) {
+        newBasket.splice(index, 1);
       }
-    });
+      db.collection("users").doc(user.uid).set({
+        basket: newBasket,
+      });
+    }
   };
 
   return (

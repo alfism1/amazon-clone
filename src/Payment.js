@@ -38,6 +38,12 @@ function Payment() {
     getClientSecret();
   }, [basket]);
 
+  useEffect(() => {
+    if(user === null)
+      history.replace("/login");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
   const handleSubmit = async (event) => {
     // stripe process
     event.preventDefault();

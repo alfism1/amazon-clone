@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Home.css";
 import "./Layout.css";
 import Product from "./Product";
-import { db, auth } from "./firebase";
+import { db } from "./firebase";
 import Button from "@material-ui/core/Button";
 import { SnackbarProvider, useSnackbar } from "notistack";
 import { useStateValue } from "./StateProvider";
@@ -29,22 +29,23 @@ function Home() {
 
               // logged in user will save basket state into firestore
               // non-logged in user will save basket state into local storage
-              auth.onAuthStateChanged((authUser) => {
-                if (authUser) {
-                  const index = basket.findIndex(
-                    (basketItem) => basketItem.id === data.id
-                  );
-                  let newBasket = [...basket];
+              if (user) {
+                const index = basket.findIndex(
+                  (basketItem) => basketItem.id === data.id
+                );
+                let newBasket = [...basket];
 
-                  if (index >= 0) {
-                    newBasket.splice(index, 1);
-                  }
-                  db.collection("users").doc(user.uid).set({
-                    basket: newBasket,
-                  });
+                if (index >= 0) {
+                  newBasket.splice(index, 1);
                 }
+                db.collection("users").doc(user.uid).set({
+                  basket: newBasket,
+                });
+              }
+
+              enqueueSnackbar(`${data.category} removed from basket.`, {
+                variant: "warning",
               });
-              enqueueSnackbar(`${data.category} removed from basket.`, { variant: "warning" });
               closeSnackbar(key);
             }}
           >
@@ -98,7 +99,7 @@ function Home() {
                     callback={handleClickWithAction({
                       id: item.id,
                       title: item.data.title,
-                      category: item.data.category
+                      category: item.data.category,
                     })}
                   />
                 </div>
