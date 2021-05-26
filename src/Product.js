@@ -6,7 +6,7 @@ import { Skeleton } from "@material-ui/lab";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
-function Product({ loading = false, id, title, price, image, rating }) {
+function Product({ loading = false, id, title, price, image, rating, callback }) {
   // eslint-disable-next-line no-unused-vars
   const [{ basket, user }, dispatch] = useStateValue();
 
@@ -34,6 +34,10 @@ function Product({ loading = false, id, title, price, image, rating }) {
           });
       }
     });
+
+    if(typeof(callback) === "function")
+      callback();
+    
   };
 
   return (

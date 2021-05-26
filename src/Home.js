@@ -2,10 +2,65 @@ import React, { useEffect, useState } from "react";
 import "./Home.css";
 import "./Layout.css";
 import Product from "./Product";
-import { db } from "./firebase";
+import { db, auth } from "./firebase";
+import Button from "@material-ui/core/Button";
+import { SnackbarProvider, useSnackbar } from "notistack";
+import { useStateValue } from "./StateProvider";
 
 function Home() {
   const [items, setItems] = useState([]);
+  const [{ basket, user }, dispatch] = useStateValue();
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const handleClickWithAction = (data) => () => {
+    enqueueSnackbar(`${data.category} product added to basket.`, {
+      variant: "success",
+      action: (key) => (
+        <React.Fragment>
+          <Button
+            color="default"
+            size="small"
+            onClick={() => {
+              dispatch({
+                type: "REMOVE_FROM_BASKET",
+                id: data.id,
+              });
+
+              // logged in user will save basket state into firestore
+              // non-logged in user will save basket state into local storage
+              auth.onAuthStateChanged((authUser) => {
+                if (authUser) {
+                  const index = basket.findIndex(
+                    (basketItem) => basketItem.id === data.id
+                  );
+                  let newBasket = [...basket];
+
+                  if (index >= 0) {
+                    newBasket.splice(index, 1);
+                  }
+                  db.collection("users").doc(user.uid).set({
+                    basket: newBasket,
+                  });
+                }
+              });
+              enqueueSnackbar(`${data.category} removed from basket.`, { variant: "warning" });
+              closeSnackbar(key);
+            }}
+          >
+            Remove
+          </Button>
+          <Button
+            color="default"
+            size="small"
+            onClick={() => closeSnackbar(key)}
+          >
+            Dismiss
+          </Button>
+        </React.Fragment>
+      ),
+    });
+  };
 
   useEffect(() => {
     db.collection("items")
@@ -40,6 +95,11 @@ function Home() {
                     price={item.data.price}
                     rating={item.data.rating}
                     image={item.data.image}
+                    callback={handleClickWithAction({
+                      id: item.id,
+                      title: item.data.title,
+                      category: item.data.category
+                    })}
                   />
                 </div>
               );
@@ -72,4 +132,19 @@ function Home() {
   );
 }
 
-export default Home;
+// export default Home;
+
+export default function IntegrationNotistack() {
+  return (
+    <SnackbarProvider
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      maxSnack={3}
+      style={{ marginTop: "50px" }}
+    >
+      <Home />
+    </SnackbarProvider>
+  );
+}

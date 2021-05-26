@@ -33,8 +33,9 @@
 }
 
 .footer__main > div > div {
-  margin-top: 25px;
-  margin-bottom: 25px;
+  box-sizing: border-box;
+  margin: 25px 0;
+  padding: 10px;
 }
 
 .footer__main ul {
@@ -45,4 +46,42 @@
 .footer__main ul > li {
   margin: 7px 0;
   font-size: 12px;
+}
+
+.footer__bottom {
+  background-color: #131921;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0;
+  border-top: 1px solid #37475A;
+}
+
+.footer__logo {
+  width: 100px;
+  object-fit: contain;
+  margin: 0 20px;
+}
+
+.footer__btnmenu button {
+  color: white;
+  background: none;
+  border: 1px solid white;
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 12px;
+  margin: 5px;
+}
+
+@media only screen and (max-width: 450px) {
+  .footer__main {
+    background-color: #131921;
+    color: #ffffff;
+    padding: 20px 50px;
+  }
+  .footer__btnmenu {
+    display: flex;
+    flex-direction: column;    
+  }
 }
