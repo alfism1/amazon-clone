@@ -5,7 +5,6 @@ import { db } from "./firebase";
 import { Skeleton } from "@material-ui/lab";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { useHistory } from "react-router";
 
 function Product({
   loading = false,
@@ -19,23 +18,7 @@ function Product({
   // eslint-disable-next-line no-unused-vars
   const [{ basket, user }, dispatch] = useStateValue();
 
-  const history = useHistory();
-
   const addToBasket = () => {
-    // logged in user will save basket state into firestore
-    // non-logged in user will save basket state into local storage
-    if (user !== null) {
-      db.collection("users")
-        .doc(user?.uid)
-        .set({
-          basket: [...basket, { id, title, image, price, rating }],
-        });
-    } 
-    // redirect to login page
-    else {
-      history.push("/login");
-    }
-
     // dispatch the item into the data layer
     dispatch({
       type: "ADD_TO_BASKET",
@@ -47,6 +30,16 @@ function Product({
         rating,
       },
     });
+
+    // logged in user will save basket state into firestore
+    // non-logged in user will save basket state into local storage
+    if (user !== null) {
+      db.collection("users")
+        .doc(user?.uid)
+        .set({
+          basket: [...basket, { id, title, image, price, rating }],
+        });
+    }
 
     if (typeof callback === "function") callback();
   };
